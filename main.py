@@ -1,6 +1,7 @@
 import cv2
 import numpy as np
 import csv
+from zone_manager import save_zones,load_zones
 from ultralytics import YOLO
 
 # ------------------------------------------------
@@ -52,14 +53,23 @@ cv2.resizeWindow(
 # ZONES
 # ------------------------------------------------
 
-zones = {
-    "Zone 1": [],
-    "Zone 2": [],
-    "Zone 3": []
-}
+zones = load_zones(width, height)
+
+if zones is None:
+
+    zones = {
+        "Zone 1": [],
+        "Zone 2": [],
+        "Zone 3": []
+    }
+
+    selecting = True
+
+else:
+
+    selecting = False
 
 current_zone = "Zone 1"
-selecting = True
 
 # ------------------------------------------------
 # HISTORICAL CSV
@@ -296,7 +306,7 @@ while selecting:
                 valid = False
 
         if valid:
-
+            save_zones(zones,width,height)
             selecting = False
 
             print("All zones saved!")
